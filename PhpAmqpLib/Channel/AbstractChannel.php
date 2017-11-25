@@ -315,6 +315,12 @@ abstract class AbstractChannel
      */
     public function wait($allowed_methods = null, $non_blocking = false, $timeout = 0)
     {
+        if (class_exists('\GoodsRu\app\di\serviceLocator\Locator')) {
+            $timeout = \GoodsRu\app\di\serviceLocator\Locator::container()->get('rabbit_mq_wait_timeout');
+        } else {
+            $timeout = 3;
+        }
+
         $this->debug->debug_allowed_methods($allowed_methods);
 
         $deferred = $this->process_deferred_methods($allowed_methods);
